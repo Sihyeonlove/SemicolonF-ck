@@ -1,4 +1,5 @@
 # SemicolonF-ck
+![짤](./semifrank.jpg)
 Brainf*ck를 응용하여, 세미콜론과 그리스어 물음표만을 이용할 것입니다.
 
 언어 설명 : 기존 Brainf*ck 코드를 짜는 것과 비슷합니다.
