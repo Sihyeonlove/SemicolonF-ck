@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인터프리터</title>
+</head>
+<body>
+  <h1>SemicolonF*ck</h1>
+  <p>Brainf*ck 구현과 HTML 코드 부분은 ChatGPT를 이용하였습니다.</p>
+  <textarea id="input" rows="10" cols="50" placeholder="Enter code here..."></textarea><br>
+  <button onclick="runBrainfuck()">실행</button><br>
+  <h2>결과 : </h2>
+  <pre id="output"></pre>
+
+  <script>
+    function semiToNum(bits) {
+        let result = '';
+        const bitmap = [
+        ';;;',//: '0', // ;;;;;;
+        ';;;',//: '1',
+        ';;;',//: '2',
+        ';;;',//: '3',
+        ';;;',//: '4',
+        ';;;',//: '5',
+        ';;;',// '6',
+        ';;;',//: '7'
+    ];
+    // 문자열을 3글자씩 자르고, 각각의 3글자를 콘솔에 출력합니다.
+    for (let i = 0; i < bits.length; i += 3) {
+        const chunk = bits.substring(i, i + 3);
+        const fi = bitmap.findIndex(a => a == chunk);
+        result += fi.toString();
+        
+    }
+    return result;
+}
+function numToCode(input) {
+    let result = '';
+    for (let i = 0; i < input.length; i++) {
+        const number = parseInt(input[i]); 
+        if(number == 0){
+            result += '>'
+        }
+        else if(number == 1){
+result += '<';
+}
+else if(number == 2){
+    result += '+';
+}
+else if(number == 3){
+    result += '-';
+}
+else if(number == 4){
+    result += '.';
+}
+else if(number == 5){
+    result += ',';
+}
+else if(number == 6){
+    result += '[';
+}
+else{
+    result += ']';
+}
+    }
+    return result;
+}
+    function runBrainfuck() {
+      const code = numToCode(semiToNum(document.getElementById('input').value));
+      const outputElement = document.getElementById('output');
+      
+      const memory = new Uint8Array(30000); // 30,000개의 메모리 셀을 가진 테이프 생성
+      let pointer = 0; // 포인터 초기 위치는 0
+      let output = ''; // 출력할 문자열
+      let loopStack = []; // 루프 시작 위치를 저장하는 스택
+      let instructionPointer = 0; // Brainfuck 코드의 명령어 위치
+
+      while (instructionPointer < code.length) {
+        const instruction = code[instructionPointer];
+        switch (instruction) {
+          case '>':
+            pointer++;
+            break;
+          case '<':
+            pointer--;
+            break;
+          case '+':
+            memory[pointer]++;
+            break;
+          case '-':
+            memory[pointer]--;
+            break;
+          case '.':
+            output += String.fromCharCode(memory[pointer]);
+            break;
+          case ',':
+            // 사용자 입력은 여기서 처리해야 합니다. (예: prompt 사용)
+            break;
+          case '[':
+            if (memory[pointer] === 0) {
+              // 현재 메모리 셀이 0이면 해당 루프를 건너뜁니다.
+              let loopDepth = 1;
+              while (loopDepth !== 0) {
+                instructionPointer++;
+                if (code[instructionPointer] === '[') {
+                  loopDepth++;
+                } else if (code[instructionPointer] === ']') {
+                  loopDepth--;
+                }
+              }
+            } else {
+              loopStack.push(instructionPointer);
+            }
+            break;
+          case ']':
+            if (memory[pointer] !== 0) {
+              instructionPointer = loopStack[loopStack.length - 1];
+            } else {
+              loopStack.pop();
+            }
+            break;
+        }
+        instructionPointer++;
+      }
+
+      outputElement.textContent = output; // 결과를 출력합니다.
+    }
+  </script>
+</body>
+</html>
