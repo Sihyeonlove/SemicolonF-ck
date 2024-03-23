@@ -26,7 +26,7 @@
         ';;;',// '6',
         ';;;',//: '7'
     ];
-    // 문자열을 3글자씩 자르고, 각각의 3글자를 콘솔에 출력합니다.
+    // 문자열을 3글자씩 자르고, 비트맵에서 findIndex()를 실행시켜 숫자로 즉시 변환되게 합니다
     for (let i = 0; i < bits.length; i += 3) {
         const chunk = bits.substring(i, i + 3);
         const fi = bitmap.findIndex(a => a == chunk);
